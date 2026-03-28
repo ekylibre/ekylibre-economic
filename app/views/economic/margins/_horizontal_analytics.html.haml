@@ -1,0 +1,49 @@
+%table.heavy-table
+  %tr
+    %th{ colspan: 2 } Produit
+    %th.text-right :direct_charges.tl
+    %th.text-right :loans.tl
+    %th.text-right :quantity_produced.tl
+    %th.text-right :receipts.tl
+    %th.text-right :gross_margin.tl
+    %th.text-right :fixed_charges.tl
+    %th.text-right :market_threshold.tl
+    %th.text-right :net_margin.tl
+  - budget.revenues.each do |revenue|
+    - { '' => 1,
+      size_unit.symbol => size.to_d,
+      revenue.unit.symbol => revenue.total_quantity.to_d,
+    }.each_with_index do |o, index|
+      - ratio = o.first
+      - coeff = o.second
+      %tr
+        - if index.zero?
+          %td{ rowspan: 6 }= revenue.variant_name
+          %td{ rowspan: 3 }= :planned.tl
+        - next if coeff.zero?
+        %td.text-right= ratio_to_cool(revenue.direct_expenses_amount, coeff, ratio)
+        %td.text-right= ratio_to_cool(revenue.loan_repayments_amount, coeff, ratio)
+        %td.text-right= ratio_to_cool(revenue.total_quantity, coeff, ratio, precision: 1, unit: revenue.unit.symbol)
+        %td.text-right= ratio_to_cool(revenue.amount, coeff, ratio)
+        %td.text-right= ratio_to_cool(revenue.raw_margin, coeff, ratio)
+        %td.text-right= ratio_to_cool(revenue.indirect_expenses_amount, coeff, ratio)
+        %td.text-right= ratio_to_cool(revenue.commercialization_threshold, coeff, ratio)
+        %td.text-right= ratio_to_cool(revenue.net_margin, coeff, ratio)
+  - budget.revenues.each do |revenue|
+    - { '' => 1,
+      size_unit.symbol => size.to_d,
+      revenue.unit.symbol => revenue.real_total_quantity.to_d,
+    }.each_with_index do |o, index|
+      - ratio = o.first
+      - coeff = o.second
+      %tr
+        - if index.zero?
+          %td{ rowspan: 3 }= :realised.tl
+        %td.text-right= ratio_to_cool(revenue.real_direct_expenses_amount, coeff, ratio)
+        %td.text-right= ratio_to_cool(revenue.real_loan_repayments_amount, coeff, ratio)
+        %td.text-right= ratio_to_cool(revenue.real_total_quantity, coeff, ratio, precision: 1, unit: revenue.unit.symbol)
+        %td.text-right= ratio_to_cool(revenue.real_amount, coeff, ratio)
+        %td.text-right= ratio_to_cool(revenue.real_raw_margin, coeff, ratio)
+        %td.text-right= ratio_to_cool(revenue.real_indirect_expenses_amount, coeff, ratio)
+        %td.text-right= ratio_to_cool(revenue.real_commercialization_threshold, coeff, ratio)
+        %td.text-right= ratio_to_cool(revenue.real_net_margin, coeff, ratio)

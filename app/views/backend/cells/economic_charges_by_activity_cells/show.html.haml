@@ -1,0 +1,6 @@
+- if @series.any?
+  = popover_description(@title_cel, @description_cel)
+  = waterfall_highcharts(@series, zoom_type: 'x', x_axis: { categories: @categories}, y_axis: {title: {text: :amount.tl}, stack_labels: {enabled: true,  allow_overlap: true, format: "#{'{total:,.0f}'} €"}}, legend: {enabled: true}, plot_options: {series: {stacking: 'normal'}, waterfall: {data_labels: {enabled: true, format: '{point.y:,.0f}  €', shadow: false, color: "white"}}})
+  = cell_footer(:economic_waterfall_footer.tl)
+- else
+  = no_data

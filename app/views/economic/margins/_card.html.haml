@@ -1,0 +1,8 @@
+- campaign ||= current_campaign
+- currency = Onoma::Currency.find(Preference[:currency])
+.activity.active{style: "border-right-color: #{activity.color}"}
+  - if %w[administering animal_farming plant_farming tool_maintaining processing wine_making vine_farming].include?(activity.family)
+    = render "economic/margins/card_content/#{activity.family}", activity: activity, campaign: campaign, currency: currency, result: result
+    = render "economic/margins/margin", currency: currency, result: result
+  - else
+    = render "economic/margins/card_content/default", activity: activity, campaign: campaign, currency: currency, result: result

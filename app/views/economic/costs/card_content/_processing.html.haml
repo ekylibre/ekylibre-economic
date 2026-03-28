@@ -1,0 +1,10 @@
+- attrs = {}
+- if (avatar_path = activity_avatar_path(activity))
+  - attrs = { style: "background-image: url(#{image_path(avatar_path)})" }
+- title_name = "#{activity.name} | #{result.total_area} | #{result.yield[:default]} #{result.yield[:unit]}"
+= link_to('', {controller: "/backend/activities", action: :show, id: activity.id }, attrs.merge(class: 'activity-avatar', title: activity.name))
+.activity-content
+  .activity-name= link_to(title_name, {controller: "/backend/activities", action: :show, id: activity.id }, title: activity.name)
+  - budget = activity.budget_of(current_campaign)
+  - if budget && budget.items.any?
+    = tool_to(:edit_budget.tl, { controller: '/backend/activity_budgets', action: :edit, id: budget.id })

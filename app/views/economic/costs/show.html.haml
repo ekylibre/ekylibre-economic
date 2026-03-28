@@ -1,0 +1,16 @@
+- main_period_selector(:year)
+
+- if @activities_by_families.present?
+  = janus do |j|
+    - j.face :cobbles do
+      - @activities_by_families.each do |family, activities_results |
+        .activity-family.activity-cards
+          .activity-family-heading
+            %h2.activity-family-title= family.human_name
+          .activity-family-body
+            .activity-economic-containers
+              - activities_results.each do |activity_result|
+                = render 'economic/costs/card', activity: activity_result.activity, campaign: current_campaign, result: activity_result.result
+- else
+  .placeholding-message
+    = :no_open_activities_found_with_budgets_you_can_add_it_from_activity_budgets.tn

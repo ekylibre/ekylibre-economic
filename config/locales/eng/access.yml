@@ -1,0 +1,7 @@
+eng:
+  access:
+    resources:
+      costs: "Production costs"
+      economic_dashboard: "Economic dashboard"
+      margins: "Margins"
+      simulators: "Market thresholds"

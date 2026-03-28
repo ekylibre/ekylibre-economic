@@ -1,0 +1,27 @@
+economic_dashboard:
+  read:
+    actions:
+    - "economic/dashboards#economic"
+costs:
+  read:
+    dependencies:
+    - read-economic_dashboard
+    actions:
+    - "economic/costs#show"
+margins:
+  read:
+    dependencies:
+    - read-economic_dashboard
+    actions:
+    - "economic/margins#show"
+  export:
+    dependencies:
+    - read-margins
+    actions:
+    - "economic/margins#margins_xslx_export"
+simulators:
+  read:
+    dependencies:
+    - read-economic_dashboard
+    actions:
+    - "economic/simulators#show"

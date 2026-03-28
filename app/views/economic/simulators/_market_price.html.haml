@@ -1,0 +1,49 @@
+:ruby
+  # Adding threshold data to series
+  def add_threshold_data(series, categories, activity_min_price, campaign)
+    threshold_data = []
+    categories.each do |c|
+      threshold_data << [c, activity_min_price.to_f]
+    end
+    series << {name: I18n.t('front-end.labels.market_threshold'), data: threshold_data, visible: true, color: "#DD0000"}
+  end
+
+  # activity_min_price have to be computed before
+  series = []
+  colors = { farmer_price: "#F5DE1A", matif_price: "#1AF566", shipping_price: "#1AD4F5", eu_price:  "#1A24F5" , world_price: "#F51ACA" }
+  departments = ['0'] # FRANCE
+
+  department_number = Entity.of_company.default_mail_address&.department_number
+  departments << department_number if department_number
+
+  # add FR prices
+  if activity.plant_farming?
+    fr_dataset = MasterProductionPrice.of_harvest_year(campaign.harvest_year).of_variety(activity.cultivation_variety).of_departments(departments).of_output(main_product_variety).reorder(:started_on)
+  elsif activity.animal_farming?
+    fr_dataset = MasterProductionPrice.of_harvest_year(campaign.harvest_year).of_departments(departments).of_output(main_product_variety).reorder(:started_on)
+  end
+
+  categories = (1..12).to_a.map{|month| "#{month.to_s.rjust(2, '0')}/#{campaign.harvest_year}"}
+
+  if fr_dataset && fr_dataset.any?
+    fr_dataset.group_by(&:nature).each do |nature, dataset|
+      serie_data = []
+      categories.each do |month|
+        values = dataset.reject {|t| t.started_on.strftime("%m/%Y") != month }
+        if values.any?
+          serie_data << (values.pluck(:final_price).sum / values.size.to_f).round(2).to_f
+        else
+          serie_data << nil
+        end
+      end
+      series << { name: I18n.t("front-end.labels.#{nature.to_s}"), data: serie_data, color: colors[nature.to_sym] }
+    end
+  end
+
+  # add EU prices
+  series.concat(EuPriceSerieBuilder.new(activity_family: activity.family , harvest_year: campaign.harvest_year, variety: activity.cultivation_variety).build_series)
+
+  # add_threshold_data
+  series = add_threshold_data(series, categories, activity_min_price, campaign)
+
+#eco-highchart= spline_highcharts(series, x_axis: {categories: categories}, y_axis: {title: {text: :values.tl}}, legend: { enabled: true }, plot_options: {series: {marker: {enabled: true}}})

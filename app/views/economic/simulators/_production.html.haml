@@ -1,0 +1,44 @@
+.med-info.important
+  %table.full-table
+    %tr
+      %td
+        %span.title.total-area-default{"data-default" => result.total_area.gsub(',', '.').to_f}= (activity.plant_farming? ? :net_surface_area.tl : :support.tl)
+      %td{colspan: 2}
+        %span.h4=  result.total_area
+    - %i[threshold_product fixed_direct_products proportional_direct_charges fixed_direct_charges gross_margin].each do |row|
+      %tr
+        %td
+          - if %i[proportional_direct_charges fixed_direct_charges].include?(row)
+            - row_label =  "- #{row.tl}"
+          - elsif %i[gross_margin].include?(row)
+            - row_label =  "= #{row.tl}"
+          - else
+            - row_label =  "+ #{row.tl}"
+          %span.title{"class" => "#{row}-default", "data-default" => result.send(row)[:default]}= row_label
+          - detail_label = "#{row}_details"
+          - if I18n.exists? "labels.#{detail_label}"
+            %span.details= detail_label.tl
+        %td
+          %span{"class" => "format-economic-result-with-unit economic-work #{row}-work"}=  ActivityEconomic.format_n(result.send(row)[:per_unit])
+        %td
+          %span{"class" => "format-economic-result-with-unit economic-area #{row}-area"}=  ActivityEconomic.format_n(result.send(row)[:per_area])
+    %td.entry{colspan: 3}
+      %a= link_to(content_tag(:i, nil, class: '#side icon icon-plus'), title: :more.tl, target: :_blank)
+    - %i[activity_indirect_products activity_indirect_charges activity_employees_wages activity_depreciations_charges activity_loans_charges activity_farmer_wages activity_cash_provisions].each do |row|
+      %tr.hidden-eco{style: "display: none;"}
+        %td
+          - row_label = %i[activity_indirect_charges activity_employees_wages activity_depreciations_charges activity_loans_charges activity_farmer_wages].include?(row) ? "- #{row.tl}" : "+ #{row.tl}"
+          %span.title{"class" => "#{row}-default", "data-default" => result.send(row)[:default], "data-ratio" => result.send(row)[:activity_key_ratio]}= row.tl
+          - detail_label = "#{row}_details"
+          - if I18n.exists? "labels.#{detail_label}"
+            %span.details= detail_label.tl
+        %td
+          %span{"class" => "format-economic-result-with-unit #{row}-work"}=  ActivityEconomic.format_n(result.send(row)[:per_unit])
+        %td
+          %span{"class" => "format-economic-result-with-unit #{row}-area"}=  ActivityEconomic.format_n(result.send(row)[:per_area])
+    %tr
+      %td.yield-row{colspan: 3}
+        .slider-table-flex
+          %span.title.yield-default{"data-default" => result.yield[:default], "data-work-unit" => result.work_unit, "data-area-unit" => result.area_unit}= :yield.tl
+          %span.slider{data: {regulator: {value: result.yield[:default], unit: " #{result.yield[:unit]}"}.to_json}, class: "slider-yield", id: "production-#{rand(1..10000)}"}
+          %span.h4.slider-yield-vary= "#{ActivityEconomic.format_n(result.yield[:default])} #{result.yield[:unit]}"

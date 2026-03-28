@@ -1,0 +1,7 @@
+fra:
+  access:
+    resources:
+      costs: "Coûts de production"
+      economic_dashboard: "Tableau de bord économique"
+      margins: "Marges"
+      simulators: "Seuils de commercialisation"

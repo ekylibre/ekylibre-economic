@@ -1,0 +1,82 @@
+%div.margin-economics
+%table.full-table
+  %tr
+    %td{colspan: 1}
+      = ''
+    %td.last-planned-column.column-name.center{colspan: 3, style: "border-right: 1px solid lightgray;"}
+      = "#{:planned.tl}".upcase
+    %td.last-planned-column.column-name.center{colspan: 3}
+      = "#{:realised.tl}".upcase
+
+  - %i[product fixed_direct_products proportional_direct_charges fixed_direct_charges gross_margin].each do |row|
+    %tr
+      %td
+        .med-info.important
+          - if %i[proportional_direct_charges fixed_direct_charges].include?(row)
+            - row_label =  "- #{row.tl}"
+          - elsif %i[gross_margin].include?(row)
+            - row_label =  "= #{row.tl}"
+          - else
+            - row_label =  "+ #{row.tl}"
+          %span.title{"class" => "#{row}-default", "data-default" => result.send(row)[:default]}= row_label
+          - detail_label = "#{row}_details"
+          - if I18n.exists? "labels.#{detail_label}"
+            %span.details= detail_label.tl
+      %td
+        %span.h4{"class" => "format-economic-result without-unit #{row}-work"}=  result.send(row)[:per_unit]
+      %td
+        %span.h4{"class" => "format-economic-result without-unit #{row}-area"}=  result.send(row)[:per_area]
+      %td.last-planned-column
+        %span.h4{"class" => "format-economic-result without-unit #{row}-default"}=  result.send(row)[:default]
+        %span.format-economic-result= "€"
+      %td
+        %span.h4{"class" => "format-economic-result without-unit #{row}-work"}=  result.send("real_#{row}")[:per_unit]
+      %td
+        %span.h4{"class" => "format-economic-result without-unit #{row}-area"}=  result.send("real_#{row}")[:per_area]
+      %td.last-planned-column
+        %span.h4{"class" => "format-economic-result without-unit #{row}-default"}=  result.send("real_#{row}")[:default]
+        %span.format-economic-result= "€"
+  %td.last-planned-column.entry{colspan: 4}
+    .med-info.important
+      %a= link_to(content_tag(:i, nil, class: '#side icon icon-plus'), title: :more.tl, target: :_blank)
+  - %i[activity_indirect_products activity_indirect_charges activity_employees_wages activity_depreciations_charges activity_loans_charges activity_farmer_wages].each do |row|
+
+    %tr.hidden-eco{style: "display: none;"}
+      %td
+        .med-info.important
+          - row_label = %i[activity_indirect_charges activity_employees_wages activity_depreciations_charges activity_loans_charges activity_farmer_wages].include?(row) ? "- #{row.tl}" : "+ #{row.tl}"
+          %span.title{"class" => "#{row}-default", "data-default" => result.send(row)[:default]}= row_label
+      %td
+        %span.h4{"class" => "format-economic-result without-unit #{row}-work"}=  result.send(row)[:per_unit]
+      %td
+        %span.h4{"class" => "format-economic-result without-unit #{row}-area"}=  result.send(row)[:per_area]
+      %td.last-planned-column
+        %span.h4{"class" => "format-economic-result without-unit #{row}-default"}=  result.send(row)[:default].round(2)
+        %span.format-economic-result= "€"
+      %td
+        %span.h4{"class" => "format-economic-result without-unit #{row}-work"}=  result.send("real_#{row}")[:per_unit]
+      %td
+        %span.h4{"class" => "format-economic-result without-unit #{row}-area"}=  result.send("real_#{row}")[:per_area]
+      %td.last-planned-column
+        %span.h4{"class" => "format-economic-result without-unit #{row}-default"}=  result.send("real_#{row}")[:default].round(2)
+        %span.format-economic-result= "€"
+  %tr
+    - color = (result.net_margin[:default] > 0 ? :green : :red)
+    %td
+      .med-info.important
+        %span.title{"class" => "net-margin-default", "data-default" => result.net_margin[:default]}= "= #{:net_margin.tl}"
+    %td
+      %span.h4{"class" => "net-margin-work format-economic-result without-unit", "style" =>"color: #{color}; font-weight: bold"}= result.net_margin[:per_unit]
+    %td
+      %span.h4{"class" => "net-margin-area format-economic-result without-unit"}=  result.net_margin[:per_area]
+    %td.last-planned-column
+      %span.h4{"class" => "net-margin-default format-economic-result without-unit"}=  result.net_margin[:default]
+      %span.format-economic-result= "€"
+    - real_color = (result.real_net_margin[:default] > 0 ? :green : :red)
+    %td
+      %span.h4{"class" => "net-margin-work format-economic-result without-unit", "style" =>"color: #{real_color}; font-weight: bold"}= result.real_net_margin[:per_unit]
+    %td
+      %span.h4{"class" => "net-margin-area format-economic-result without-unit"}=  result.real_net_margin[:per_area]
+    %td.last-planned-column
+      %span.h4{"class" => "net-margin-default format-economic-result without-unit"}=  result.real_net_margin[:default]
+      %span.format-economic-result= "€"

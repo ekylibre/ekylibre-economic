@@ -1,0 +1,6 @@
+- if @series.any?
+  = popover_description(@title_cel, @description_cel)
+  = column_highcharts(@series, drilldown: @drilldown, title: {text: @title}, x_axis: { type: 'category', categories: formate_and_translate(@categories) }, y_axis: {title: {text: :amount_with_taxes.tl}, stack_labels: {enabled: true, format: "{total} €"}, labels: { format: "{value} €" }}, legend: true, plot_options: { column: {stacking: 'normal'}})
+  = cell_footer(:cash_forecast_cell_bottom.tl)
+- else
+  = no_data

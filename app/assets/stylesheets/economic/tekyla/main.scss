@@ -1,0 +1,165 @@
+.fixed-economics{
+  max-height: 128px;
+  width: 100%;
+  min-height: 128px;
+  padding: 10px;
+  box-sizing: border-box;
+  border-bottom: solid 1px lightgray;
+}
+.cobbles-flex{
+  overflow-x: auto;
+  top: 128px;
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+}
+.column-flex{
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.product-work{
+  color: green;
+  font-weight: bold;
+}
+.threshold_product-work, .threshold_product-area{
+  color: red;
+  font-size: 20px;
+}
+.net-margin-work{
+  color: green;
+  font-weight: bold;
+}
+.production-cost-work{
+  color: green;
+  font-weight: bold;
+}
+.slider-yield{
+  width: 100%;
+}
+.slider-table-flex{
+  display: flex;
+  .bigger-half{
+    width: 65%;
+  }
+  .smaller-half{
+    width: 35%;
+  }
+  .splitted-width{
+    .med-info{
+      height: 100%;
+      .full-table{
+        height: 100%;
+        .format-economic-result-with-unit{
+          font-size: 16px;
+          white-space: nowrap;
+        }
+        .yield-row{
+          background-color: mix($base-color, white, $weight: 10%);
+        }
+      }
+    }
+  }
+}
+
+.slider-yield-vary{
+  white-space: nowrap;
+}
+.full-regulator {
+  display: flex;
+  .name {
+    display: inline-block;
+    white-space: normal;
+    font-size: 16px;
+    min-width: 332px;
+    max-width: 332px;
+  }
+  .slider {
+    width: 100%;
+  }
+  .value, .price {
+    display: inline-block;
+    font-size: $fs-large;
+    white-space: normal;
+    font-size: 16px;
+    padding-right: 20px;
+    min-width: 180px;
+    max-width: 180px;
+    text-align: right;
+  }
+  .price {
+    font-weight: bold;
+    text-align: center;
+    white-space: normal;
+  }
+}
+
+.heavy-table {
+  td {
+    white-space: nowrap;
+  }
+}
+.activity-sections {
+  margin-top: -8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  .activity-section {
+    flex-grow: 3;
+    border-left: 1px solid #DDD;
+    padding: 1px 15px;
+    &:first-child {
+      border-left: none;
+    }
+    .activity-section-title {
+      margin: -3px 0 3px;
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #888888;
+      font-weight: bold;
+      text-align: center;
+    }
+    .table {
+      tbody {
+        border: none;
+        td, th {
+          border: none;
+          text-align: center;
+          padding: 1px;
+          white-space: nowrap;
+        }
+        td {
+          font-weight: bold;
+          font-size: 1rem;
+        }
+        th {
+          font-weight: normal;
+        }
+      }
+    }
+    &.clickable {
+      cursor: pointer;
+    }
+    &.no-budget {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+}
+
+.no-click-hchart-legend{
+  pointer-events: none;
+}
+
+.last-planned-column {
+  border-right: 1px solid lightgray;
+}
+
+.format-economic-result {
+  font-size: 15px;
+}
+
+.column-name {
+  font-weight: 700;
+}

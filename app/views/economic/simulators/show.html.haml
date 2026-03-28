@@ -1,0 +1,33 @@
+- main_period_selector(:year)
+- eco = ActivityEconomic.new(current_campaign)
+- computed_activity_ids = EconomicIndicator.of_campaign(current_campaign).of_main_product.pluck(:activity_id)
+- activities = Activity.availables.main.where(id: computed_activity_ids).reorder(:name)
+- indirect_charges = eco.indirect_charges
+- transcodings = {annual_farmer_wages: :activity_farmer_wages, annual_employees_wages: :activity_employees_wages, annual_fixed_charges: :activity_indirect_charges, annual_cash_provisions: :activity_cash_provisions} # Each top-slider corresponds to a cobble row
+.column-flex
+  - if indirect_charges
+    - unit = "#{indirect_charges.currency} / #{:year.tl}".downcase
+    #top-sliders.fixed-economics
+      - %i[annual_farmer_wages annual_employees_wages annual_fixed_charges annual_cash_provisions].each do |ic|
+        - charge_value = indirect_charges.send(ic)
+        .full-regulator
+          %span.name{class: ic, "data-default" => charge_value.to_f, "data-previous" => charge_value.to_f}= ic.tl
+          - max_range = charge_value.to_f == 0 ? "100000" : (charge_value.to_i * 5)
+          - classes = ic.to_s.include?('wages') ? "slider-salary slider-#{ic}" : "slider-#{ic}"
+          %input.slider{"data-attr" => transcodings[ic], class: classes, max: max_range, min: 0, type: 'range', value: charge_value.to_i}
+          %span.value{"data-unit" => unit}= "#{ActivityEconomic.format_n(charge_value)} #{unit}"
+  - else
+    .placeholding-message
+      = :no_indirect_charges_found_you_can_add_it_from_activity_budgets.tn
+  - if activities
+    .cobbles-flex{:style => 'width:100%;'}
+      = cobbles do |c|
+        - activities.each do |activity|
+          - c.cobble "production_#{activity.id}".to_sym, title: activity.name do
+            - result = eco.result_for_variety(activity)
+            .slider-table-flex
+              .splitted-width.bigger-half{style: "padding-left: 0; padding-right: 0"}= render partial: 'production', locals: { result: result, activity: activity}
+              .splitted-width.smaller-half{style: "padding-left: 0; padding-right: 0"}= render partial: 'market_price', locals: { activity: activity, campaign: current_campaign, activity_min_price: result.threshold_product[:per_unit], main_product_variety: result.main_product_variety}
+  - else
+  .placeholding-message
+    = :no_open_activities_found_with_budgets_you_can_add_it_from_activity_budgets.tn

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navigation>
+  <part name="economic" icon="line-chart" after-part="production">
+    <page to="economic/dashboards#economic"/>
+    <group name="costs" icon="magnifying-glass-dollar">
+      <item name="costs">
+      	<page to="economic/costs#show"/>
+      </item>
+    </group>
+    <group name="margins" icon="hand-holding-dollar">
+      <item name="margins">
+        <page to="economic/margins#show"/>
+      </item>
+    </group>
+    <group name="commercialization_thresholds" icon="scale-balanced">
+      <item name="simulator">
+        <page to="economic/simulators#show"/>
+      </item>
+    </group>
+    <group name="profit_and_loss_matrix">
+    </group>
+  </part>
+</navigation>

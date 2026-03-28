@@ -1,0 +1,26 @@
+- main_period_selector(:year)
+
+- eco = ActivityEconomic.new(current_campaign)
+- computed_activity_ids = EconomicIndicator.of_campaign(current_campaign).of_main_product.pluck(:activity_id)
+- activities = Activity.availables.main.where(id: computed_activity_ids).reorder(:name)
+
+- main_toolbar do |t|
+  = dropdown_menu_button(:export.ta, { icon: :download }) do |d|
+    - d.item :margins_xslx_export.tl, action: :margins_xslx_export, campaign_id: current_campaign.id, activity_ids: activities.pluck(:id)
+
+- if activities.exists?
+  = janus do |j|
+    - j.face :cobbles do
+      - families = activities.order(:family).collect(&:family).uniq
+      - families.each do |family|
+        .activity-family.activity-cards
+          .activity-family-heading
+            %h2.activity-family-title= family.human_name
+          .activity-family-body
+            .activity-economic-containers
+              - activities.where(family: family).order(:name).each do |activity|
+                - result = eco.result_for_variety(activity)
+                = render 'economic/margins/card', activity: activity, campaign: current_campaign, result: result
+- else
+  .placeholding-message
+    = :no_open_activities_found_with_budgets_you_can_add_it_from_activity_budgets.tn
